@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>KEZXO MOD STORE</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@900&family=Roboto+Mono:wght@400;600&display=swap');
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { background:#000; color:#0f0; font-family:'Roboto Mono',monospace; padding:20px; min-height:100vh; position:relative; overflow-x:hidden; }
+
+    /* HEADER — SELALU KELIHATAN */
+    .header { text-align:center; margin:30px 0; z-index:10; position:relative; }
+    h1 { font-family:'Orbitron',sans-serif; font-size:2.2rem; color:#0f0; text-shadow:0 0 20px #0f0; }
+    .subtitle { color:#0ff; font-size:0.9rem; margin-top:8px; }
+
+    .container { max-width:600px; margin:0 auto; padding-bottom:60px; }
+
+    .section-title {
+      font-family:'Orbitron',sans-serif;
+      font-size:1.1rem;
+      color:#0ff;
+      text-shadow:0 0 10px #0ff;
+      margin:20px 0 12px;
+      padding:8px 0;
+      border-bottom:1px solid #0f0;
+      position:relative;
+      text-align:center;
+    }
+    .section-title::after {
+      content:'';
+      position:absolute;
+      bottom:-3px; left:50%; transform:translateX(-50%);
+      width:50px; height:2px;
+      background:#0f0;
+      box-shadow:0 0 8px #0f0;
+    }
+
+    .app { 
+      background:rgba(0,20,0,0.8); border:2px solid #0f0; border-radius:10px; 
+      padding:12px; margin:10px 0; box-shadow:0 0 10px #0f0; transition:0.3s; 
+    }
+    .app:hover { transform:translateY(-2px); box-shadow:0 0 16px #0f0; }
+    .app h3 { color:#0ff; font-weight:bold; margin-bottom:5px; font-size:0.9rem; }
+    .download { 
+      display:block; background:#0f0; color:#000; text-align:center; 
+      padding:9px; border-radius:6px; font-weight:bold; text-decoration:none; 
+      margin-top:6px; font-size:0.8rem; cursor:not-allowed; opacity:0.5; pointer-events:none; transition:0.3s; 
+    }
+    .download.active { opacity:1; cursor:pointer; pointer-events:auto; }
+    .download.active:hover { background:#0c0; transform:scale(1.04); }
+
+    /* VIP CONTAINER */
+    .vip-container {
+      background: rgba(20,0,40,0.6);
+      border: 2px solid #ff00ff;
+      border-radius: 16px;
+      padding: 16px;
+      margin: 16px 0;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 0 20px rgba(255,0,255,0.4);
+    }
+    .vip {
+      background: linear-gradient(45deg, #1a0033, #33004d);
+      border: 1px solid #00ffff;
+      border-radius: 12px;
+      padding: 14px;
+      margin: 10px 0;
+      position: relative;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .vip:hover { transform: translateY(-3px); box-shadow: 0 0 18px #00ffff; }
+    .vip h3 {
+      color: #fff; font-weight: bold; font-size: 0.95rem; text-shadow: 0 0 8px #0ff;
+      margin-bottom: 6px; display: flex; align-items: center; gap: 6px;
+    }
+    .vip h3::before {
+      content: 'VIP'; font-size: 0.65rem; color: #000;
+      background: linear-gradient(45deg, #ff00ff, #00ffff);
+      padding: 2px 7px; border-radius: 20px;
+    }
+    .vip .download {
+      background: linear-gradient(45deg, #ff00ff, #00ffff); color: #fff;
+      font-weight: bold; padding: 11px; border-radius: 9px; font-size: 0.85rem;
+      text-shadow: 0 0 4px #000;
+    }
+
+    /* PANAH MENYATU */
+    .vip-more {
+      text-align: center; padding: 12px 0; cursor: pointer; transition: 0.3s;
+      border-top: 1px dashed #00ffff; margin-top: 8px;
+    }
+    .vip-more:hover { background: rgba(0,255,255,0.05); }
+    .vip-more-text {
+      color: #00ffff; font-size: 0.85rem; font-weight: bold;
+      text-shadow: 0 0 10px #0ff; margin-bottom: 6px;
+    }
+    .vip-arrow-line {
+      width: 100%; height: 3px;
+      background: linear-gradient(90deg, transparent, #ff00ff, #00ffff, #ff00ff, transparent);
+      position: relative; margin: 8px 0; animation: pulseLine 2s infinite;
+    }
+    .vip-arrow-head {
+      width: 0; height: 0; border-left: 12px solid transparent;
+      border-right: 12px solid transparent; border-top: 16px solid #00ffff;
+      margin: 0 auto; filter: drop-shadow(0 0 6px #0ff); animation: bounceHead 1.6s infinite;
+    }
+    @keyframes pulseLine { 0%,100% { opacity:0.6; } 50% { opacity:1; } }
+    @keyframes bounceHead { 0%,100% { transform:translateY(0); } 50% { transform:translateY(6px); } }
+
+    .vip-hidden { display: none; }
+
+    .modal { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); display:none; z-index:1000; justify-content:center; align-items:center; padding:15px; }
+    .modal-content { background: linear-gradient(135deg, #1a0033, #330066); border: 3px solid transparent; border-radius: 18px; padding: 22px; text-align:center; max-width:380px; width:90%; position: relative; overflow: hidden; }
+    .modal-content::before { content: ''; position: absolute; top: -3px; left: -3px; right: -3px; bottom: -3px; background: linear-gradient(45deg, #ff00ff, #00ffff, #ffff00, #ff00ff); border-radius: 21px; z-index: -1; animation: borderRotate 4s linear infinite; }
+    @keyframes borderRotate { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    .modal h3 { color: #fff; font-size:1.2rem; margin-bottom:8px; text-shadow: 0 0 12px #0ff; }
+    .modal p { color:#0ff; margin:10px 0; font-size:0.9rem; }
+    .btn { display:block; background: linear-gradient(45deg, #00ffff, #ff00ff); color: #000; padding:12px; margin:10px 0; border-radius:10px; font-weight:bold; text-decoration:none; font-size:0.95rem; transition: 0.3s; }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 16px rgba(0,255,255,0.4); }
+    .btn.tg { background: linear-gradient(45deg, #0088cc, #00aaff); color:#fff; }
+    .close { color:#0ff; font-size:1.8rem; cursor:pointer; position:absolute; top:12px; right:16px; text-shadow: 0 0 8px #0ff; transition: 0.3s; }
+    .close:hover { transform: scale(1.2); color:#fff; }
+
+    .footer { text-align:center; margin:30px 0; color:#0a0; font-size:0.65rem; }
+
+    /* POPUP KUNCI — TRANSPARAN */
+    .lock-overlay {
+      position:fixed; top:0; left:0; width:100%; height:100%;
+      background: transparent;
+      display:flex; justify-content:center; align-items:center;
+      z-index:9999; padding:12px;
+      pointer-events: none;
+    }
+    .lock-popup {
+      background:rgba(15,15,15,0.96); 
+      border:1px solid #0f0; 
+      border-radius:12px;
+      padding:16px; text-align:center; max-width:300px; width:95%;
+      box-shadow:0 0 20px rgba(0,255,0,0.5); 
+      animation: popupIn 0.4s ease-out;
+      pointer-events: auto;
+    }
+    @keyframes popupIn { from { transform:scale(0.9); opacity:0; } to { transform:scale(1); opacity:1; } }
+    .lock-title { font-family:'Orbitron',sans-serif; font-size:1.1rem; color:#f88; font-weight:bold; margin-bottom:8px; }
+    .lock-text { font-size:0.72rem; color:#bbb; line-height:1.4; margin:10px 0; }
+    .btn-lock { display:block; background:transparent; color:#0f0; border:1px solid #0f0; padding:8px; margin:8px auto; border-radius:8px; font-weight:bold; font-size:0.76rem; width:78%; text-decoration:none; transition:0.25s; box-shadow:0 0 8px #0f0; cursor:pointer; }
+    .btn-lock:hover { background:rgba(0,255,0,0.1); transform:scale(1.02); }
+    .btn-lock.share { color:#25D366; border:1px solid #25D366; }
+    .btn-lock.share:hover { background:rgba(37,211,102,0.1); }
+    .btn-lock.disabled { opacity: 0.4; cursor: not-allowed; pointer-events: none; box-shadow: none; }
+
+    .progress-container { width:78%; height:5px; background:#222; border-radius:6px; margin:12px auto; overflow:hidden; border:1px solid #0f0; }
+    .progress-bar { width:0%; height:100%; background:#0f0; border-radius:6px; transition:width 0.5s ease; }
+    .status { font-size:0.65rem; color:#0a0; margin-top:6px; }
+
+    .content-hidden { display:none; }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <h1>KEZXO MOD STORE</h1>
+  <p class="subtitle">46 APK Gratis • 4 VIP Premium</p>
+</div>
+
+<!-- POPUP KUNCI -->
+<div class="lock-overlay" id="lockScreen">
+  <div class="lock-popup">
+    <div class="lock-title">WELCOME TO WEB 45+ APK JB GRATIS</div>
+    <p class="lock-text">Sebelum memakai website ini harap support kami dengan<strong>follow</strong> & <strong>share</strong> , apabila ada yang jual harap lapor.</p>
+    <a href="https://whatsapp.com/channel/0029VbBcfOiIiRp0gdgEDF07" class="btn-lock" id="followBtn" target="_blank" onclick="markFollowDone(event);">FOLLOW SALURAN</a>
+    <a href="#" class="btn-lock share" id="shareBtn" onclick="shareToWA(event); return false;">SHARE KE TEMAN</a>
+    <div class="progress-container"><div class="progress-bar" id="progressBar"></div></div>
+    <p class="status" id="statusText">Lengkapi 2 langkah</p>
+  </div>
+</div>
+
+<!-- KONTEN UTAMA -->
+<div class="container content-hidden" id="mainContent">
+
+  <!-- VIP PREMIUM -->
+  <div class="section-title">VIP PREMIUM</div>
+  <div class="vip-container">
+    <div class="vip" onclick="showVIP('Metode Band WhatsApp', 'Rp20.000', 'Cara band Nomor orang Full Totor 100% work')">
+      <h3>Metode Band WhatsApp</h3>
+      <a class="download">UNLOCK VIP</a>
+    </div>
+    <div class="vip" onclick="showVIP('Website Jualan nokos', 'Rp7.000', 'Dapet akses website Nokos Murmer dan cepat!')">
+      <h3>Website nokos</h3>
+      <a class="download">UNLOCK VIP</a>
+    </div>
+    <div class="vip" onclick="showVIP('Hack Lokasi via Link', 'Rp20.000', 'Lacak lokasi target hanya bermodalkan link!')">
+      <h3>Hack Lokasi via Link</h3>
+      <a class="download">UNLOCK VIP</a>
+    </div>
+
+    <div class="vip-more" onclick="showAllVIP()">
+      <div class="vip-more-text">LIHAT 2 VIP LAINNYA</div>
+      <div class="vip-arrow-line"></div>
+      <div class="vip-arrow-head"></div>
+    </div>
+
+    <!-- VIP TAMBAHAN: SADAP KAMERA -->
+    <div class="vip vip-hidden" id="vip4" onclick="showVIP('Hack Kamera via Link', 'Rp30.000', 'Akses kamera target tanpa izin! hanya bermodalkan link')">
+      <h3>Hack Kamera via Link</h3>
+      <a class="download">UNLOCK VIP</a>
+    </div>
+
+    <!-- VIP TAMBAHAN: AI JAHAT -->
+    <div class="vip vip-hidden" id="vip5" onclick="showVIP('AI JAHAT NO SENSOR', 'Rp40.000', 'AI tanpa batas No sensor cocok — buat website dark, hack, mod, sadap! Untuk evaluasi dan edukasi')">
+      <h3>AI JAHAT NO SENSOR</h3>
+      <a class="download">UNLOCK VIP</a>
+    </div>
+
+    <!-- VIP TAMBAHAN: JASA PEMBUATAN WEBSITE -->
+    <div class="vip vip-hidden" id="vip6" onclick="showVIP('JASA PEMBUATAN WEBSITE', 'Website custom: dark, mod, hack, sadap, band, nokos — semua bisa!')">
+      <h3>JASA PEMBUATAN WEBSITE</h3>
+      <a class="download">UNLOCK VIP</a>
+    </div>
+  </div>
+
+  <!-- 46 APK GRATIS -->
+  <div class="section-title">GRATIS</div>
+  <!-- 46 APK LENGKAP -->
+ <div class="app"><h3>APK ROG GAME TURBO</h3><a href="https://www.mediafire.com/file/1wnobp0akn93qi6/ROG+GAME+TURBO+UPDATE.zip/file?dkey=mrkhkdcw4xd&r=171" class="download" target="_blank">DOWNLOAD ZIP</a></div>
+  <div class="app"><h3>APK CEK OPSI BAND</h3><a href="https://www.mediafire.com/file/aqe3npayf7px407/C-BAND_2.21.13.28.apk/file" class="download" target="_blank">DOWNLOAD</a></div>
+  <div class="app"><h3>APK BIOSKOP CINEMA MOD</h3><a href="https://sfile.mobi/sAPMIqf5LCb" class="download" target="_blank">DOWNLOAD</a></div>
+  <div class="app"><h3>100+ MENTAHAN LOGO</h3><a href="https://drive.google.com/drive/folders/1D9vXXX8k8ZZm_6sOk2d-zokBSUDo2EZt" class="download" target="_blank">BUKA FOLDER</a></div>
+  <div class="app"><h3>TIKTOK DOWNLOADER</h3><a href="https://downloader-ebon.vercel.app/" class="download" target="_blank">BUKA</a></div>
+  <div class="app"><h3>FAKE IPHONE QC</h3><a href="https://generator-ip.vercel.app/" class="download" target="_blank">BUKA</a></div>
+  <div class="app"><h3>APK UNBAND ONEDEV</h3><a href="https://www.mediafire.com/file/udidskvogus9203/unbandev_1.0.apk/file?dkey=6stgh0p1gvg&r=244" class="download" target="_blank">DOWNLOAD</a></div>
+  <div class="app"><h3>ALIGHTMOTION PREMIUM</h3><a href="https://www.mediafire.com/file/fk0z4gimiw7dzmc/Alight_Motion_Premium_by_Fianz.apk/file" class="download" target="_blank">DOWNLOAD</a></div>
+  <div class="app"><h3>YOUTUBE PREMIUM</h3><a href="https://www.mediafire.com/file/9nu3kqo9blp2h59/Youtube_Premium_RVX_v19_16_39_Cli_v5_0_1_Patches_v5_0_3_signed.apk/file" class="download" target="_blank">DOWNLOAD</a></div>
+  <div class="app"><h3>SPOTIFY PREMIUM</h3><a href="https://www.mediafire.com/file/kfm576nt3h7hgnf/SPOTIFY_PREMIUM_by_FianzCrasher.apk/file" class="download" target="_blank">DOWNLOAD</a></div>
+  <div class="app"><h3>TELEGRAM PREMIUM</h3><a href="https://www.mediafire.com/file/qcrh2cr3zncbret/Telegram_Premium_by_Fianz.apk" class="download" target="_blank">DOWNLOAD</a></div>
+  <div class="app"><h3>NETFLIX PREMIUM</h3><a href="https://www.mediafire.com/file/fp0oagpc4yjdbtz/Netflix_Premium_by_Fianz.apk/file" class="download" target="_blank">DOWNLOAD</a></div>
+  <div class="app"><h3>MT MANAGER MOD</h3><a href="https://www.mediafire.com/file/fels3jj2hdirlj7/Mt_Manager_%2528BiyuOffc%2529.apk/file" class="download" target="_blank">DOWNLOAD</a></div>
+  <div class="app"><h3>APK PS</h3><a href="https://www.mediafire.com/file/v1pkoc4yckrgcv5/APK_PS_%2528BIYU_STORE%2529.apk/file" class="download" target="_blank">DOWNLOAD</a></div>
+  <div class="app"><h3>APK SUNTIK IG</h3><a href="https://play.google.com/store/apps/details?id=com.fame.plus.follow" class="download" target="_blank">GOOGLE PLAY</a></div>
+  <div class="app"><h3>APK SUNTIK TIKTOK</h3><a href="https://play.google.com/store/apps/details?id=com.tikfamous.tik.tok.followers.likes.tikfans.reports.free.app" class="download" target="_blank">GOOGLE PLAY</a></div>
+  <div class="app"><h3>APK PUSH KONTAK</h3><a href="https://www.mediafire.com/file/nblb38pjap3a2fu/Apk%25E2%2580%25A2Push%25E2%2580%25A2Kontak.apk/file" class="download" target="_blank">DOWNLOAD</a></div>
+  <div class="app"><h3>APK AUTO SAVE CONTACT</h3><a href="https://www.mediafire.com/file/6ioyvyb7zwsz3z6/Apk_Auto_Sv_%2528Biyu_Offc%2529.apk/file" class="download" target="_blank">DOWNLOAD</a></div>
+  <div class="app"><h3>APK ORDER SOSMED</h3><a href="https://www.mediafire.com/file/ti04bah612czb4w/OrderSosmed.apk/file" class="download" target="_blank">DOWNLOAD</a></div>
+  <div class="app"><h3>PUSH KONTAK</h3><a href="https://www.mediafire.com/file/n7eczzt2de1zbuh/push_kontak.apk/file" class="download" target="_blank">DOWNLOAD</a></div>
+  <div class="app"><h3>QR NO KTP</h3><a href="https://www.mediafire.com/file/4es7cs7y6cjzale/qris_no_ktp.apk/file" class="download" target="_blank">DOWNLOAD</a></div>
+  <div class="app"><h3>BANIDO ELIT</h3><a href="https://www.mediafire.com/file/j278olstm7iutmc/BANIDO_ELIT.apk/file" class="download" target="_blank">DOWNLOAD</a></div>
+  <div class="app"><h3>8BP MOOD</h3><a href="https://www.mediafire.com/file/7y8mahv6ysq2hkx/8_BALL_POOL_MOD_V5.14.3_%2528SafefilekU%2529.apk/file" class="download" target="_blank">DOWNLOAD</a></div>
+  <div class="app"><h3>APK BEKU PAYMENT</h3><a href="https://www.mediafire.com/file/4vhnw6ghxhvqcb6/beku_payment.apk/file" class="download" target="_blank">DOWNLOAD</a></div>
+  <div class="app"><h3>BAND EMAIL</h3><a href="https://www.mediafire.com/file/u1rgn1c0v3aukwf/BANNED_GMAIL.apk/file" class="download" target="_blank">DOWNLOAD</a></div>
+  <div class="app"><h3>UNBAN/BAN NUMBER</h3><a href="https://www.mediafire.com/file/dilrmfzd96slrf4/BANNED_%2526_UNBANNED_NUMBER.apk/file" class="download" target="_blank">DOWNLOAD</a></div>
+  <div class="app"><h3>GCAM (UNTUK UP ORKUT)</h3><a href="https://www.mediafire.com/file/p7l0o1osm54r1qs/GalleryCam_1.3.2_Apkpure.apk/file" class="download" target="_blank">DOWNLOAD</a></div>
+  <div class="app"><h3>E-KTP</h3><a href="https://www.mediafire.com/file/g71sgpbvwn1dzaj/E-KTP_Simulasi_Bikin_KTP_Elektronik_Sendiri_1.0.1_Apkpure.apk/file" class="download" target="_blank">DOWNLOAD</a></div>
+  <div class="app"><h3>FAKE NOTIF OVO</h3><a href="https://www.mediafire.com/file/aackcd0n1y2lwsf/ovo__%2528SFILE.MOBI%2529.apk/file" class="download" target="_blank">DOWNLOAD</a></div>
+  <div class="app"><h3>FAKE NOTIF GO-PAY</h3><a href="https://www.mediafire.com/file/z6b4rf1jgfvqgtc/notifikasi_gopay_%2528SFILE.MOBI%2529_%25281%2529.apk/file" class="download" target="_blank">DOWNLOAD</a></div>
+  <div class="app"><h3>FAKE NOTIF DANA</h3><a href="https://www.mediafire.com/file/xysm6w0zz3m41ko/Notif_Dana_Prank_%2528SFILE.MOBI%2529_%25281%2529.apk/file" class="download" target="_blank">DOWNLOAD</a></div>
+  <div class="app"><h3>NETFLIX MOD</h3><a href="https://www.mediafire.com/file/d840ahf89aqkpda/Netflix-SV1-Tea-Mod-ModCombo.Com.apk/file" class="download" target="_blank">DOWNLOAD</a></div>
+  <div class="app"><h3>PIXELLAB COLLECTOR</h3><a href="https://www.mediafire.com/file/ztt393t7h2z9ct3/Pixellab+Collector.apk/file" class="download" target="_blank">DOWNLOAD</a></div>
+  <div class="app"><h3>PIXELLAB GREEN</h3><a href="https://www.mediafire.com/file/bta3e9hcbf44sti/Pixellab+Green.apk/file" class="download" target="_blank">DOWNLOAD</a></div>
+  <div class="app"><h3>PIXELLAB RED</h3><a href="https://www.mediafire.com/file/nbchq2l1pikqvhv/Pixellab+Red.apk/file" class="download" target="_blank">DOWNLOAD</a></div>
+  <div class="app"><h3>PIXELLAB LIME</h3><a href="https://www.mediafire.com/file/a1fq0l2ok5b5g3q/Pixellab+Lime.apk/file" class="download" target="_blank">DOWNLOAD</a></div>
+  <div class="app"><h3>PIXELLAB ROG BLUE</h3><a href="https://www.mediafire.com/file/hor8nogzphze1e2/Pixellab+Rog+Blue.apk/file" class="download" target="_blank">DOWNLOAD</a></div>
+  <div class="app"><h3>PIXELLAB NEON</h3><a href="https://www.mediafire.com/file/rfu7hsdsiqzikwm/Pixellab+Neon.apk/file" class="download" target="_blank">DOWNLOAD</a></div>
+  <div class="app"><h3>PIXELLAB GREY</h3><a href="https://www.mediafire.com/file/pasrnfw2k8f3t4m/Pixellab+Grey.apk/file" class="download" target="_blank">DOWNLOAD</a></div>
+  <div class="app"><h3>PIXELLAB FIRE</h3><a href="https://www.mediafire.com/file/sptx160xc33op7o/Pixellab+Fire.apk/file" class="download" target="_blank">DOWNLOAD</a></div>
+  <div class="app"><h3>PIXELLAB GOLD PREMIUM</h3><a href="https://www.mediafire.com/file/957kz63if53em5q/Pixellab+Gold+Premium.apk/file" class="download" target="_blank">DOWNLOAD</a></div>
+  <div class="app"><h3>APK SUPORT WA</h3><a href="https://www.mediafire.com/file/x1jm6pi30yygmh3/SUPORT_LAPOR_WA_.apk/file" class="download" target="_blank">DOWNLOAD</a></div>
+  <div class="app"><h3>APK QRIS NO KTP</h3><a href="https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://play.google.com/store/apps/details%3Fid%3Dcom.wekios.app%26hl%3Did%26referrer%3Dutm_source%253Dgoogle%2526utm_medium%253Dorganic%2526utm_term%253Dwekios%26pcampaignid%3DAPPU_1_Ho4ZacqoGouXseMP4qePkAM&ved=2ahUKEwjKr7-Go_aQAxWLS2wGHeLTAzIQ5YQBegQIHhAC&usg=AOvVaw0P__qZZPyVdNPo_CrVCqnk" class="download" target="_blank">DOWNLOAD</a></div>
+  <div class="app"><h3>APK SAVE OTOMATIS</h3><a href="https://www.mediafire.com/file/k5rg36s3jvix4up/AutoSvContack.apk/file" class="download" target="_blank">DOWNLOAD</a></div>
+  <div class="app"><h3>APK BLOKIR PAYMENT</h3><a href="https://www.mediafire.com/file/mphbcaxsfbmtz1i/APK_BEKU_PAYMENT.apk/file" class="download" target="_blank">DOWNLOAD</a></div>
+  <div class="app"><h3>APK TEMP MAIL</h3><a href="https://www.mediafire.com/file/de03ykicvzr1ett/Temp_Mail_Premium.apk/file" class="download" target="_blank">DOWNLOAD</a></div>
+</div>
+<div class="footer">
+  © 2025 ONEDEV MOD STORE | @onedev | VIP Only
+</div>
+
+<!-- MODAL VIP -->
+<div class="modal" id="vipModal">
+  <div class="modal-content">
+    <span class="close" onclick="closeVIP()">X</span>
+    <h3 id="vipTitle">VIP PREMIUM</h3>
+    <p id="vipDesc" style="font-style:italic; color:#ff0; font-size:0.85rem;"></p>
+    <p id="vipPrice" style="font-size:1rem; color:#0ff; font-weight:bold;"></p>
+    <p>Bayar via transfer → akses langsung!</p>
+    <a href="http
